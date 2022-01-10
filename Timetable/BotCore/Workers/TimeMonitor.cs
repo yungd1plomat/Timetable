@@ -100,7 +100,11 @@ namespace Timetable.BotCore.Workers
                 {
                     // Ограничение вк апи (100 юзеров за раз)
                     // Берём только userid
-                    var chunksUsers = db.Users.Include(x => x.Group).ToList().Where(x => x.Group.GroupIdentifyId == lesson.Group.GroupIdentifyId)
+                    var chunksUsers = db.Users.Include(x => x.Group)
+                                              .ToList()
+                                              .Where(x => x.Group.GroupIdentifyId == lesson.Group.GroupIdentifyId && 
+                                                          x.Subscribtion.HasValue && 
+                                                          x.Subscribtion.Value > DateTime.Now)
                                               .Select(x => x.UserId).Chunk(100);
                     if (chunksUsers != null && chunksUsers.Any())
                     {
