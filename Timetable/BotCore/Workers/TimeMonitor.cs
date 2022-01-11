@@ -53,7 +53,7 @@ namespace Timetable.BotCore.Workers
             };
         }
 
-        public void CheckTime(object obj)
+        public async void CheckTime(object obj)
         {
             // Просчитываем будущее время
             var futureTime = DateTime.Now.AddMinutes(beforeMinutes);
@@ -82,6 +82,7 @@ namespace Timetable.BotCore.Workers
                     _logger.LogInformation("Время прошло проверку " + futureTime.ToString("HH:mm dd.MM.yyyy"));
                     SendNotifications(allLessons);
                     db.Lessons.RemoveRange(allLessons);
+                    await db.SaveChangesAsync();
                 }
 
                 // Если текущее время соответствует времени обновления

@@ -55,7 +55,7 @@ namespace Timetable.BotCore.Commands.Callback
                                     {
                                         user.Subscribtion = expire.Value.AddDays(30);
                                     }
-                                    long msgId = (long)user.msgId.Value;
+                                    long? msgId = user.msgId;
                                     user.msgId = null;
                                     user.BillId = billId; // Id последнего платежа, если вдруг сообщение с проверкой не удалится
                                     await db.SaveChangesAsync();
