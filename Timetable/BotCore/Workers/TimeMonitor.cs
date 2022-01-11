@@ -29,7 +29,7 @@ namespace Timetable.BotCore.Workers
         /// <summary>
         /// Время в которое расписание обновится
         /// </summary>
-        private readonly TimeSpan updateTime = new TimeSpan(00, 10, 0); // Время в которое расписание обновится
+        private readonly TimeSpan updateTime = new TimeSpan(0, 10, 0); // Время в которое расписание обновится
 
         /// <summary>
         /// Первый запуск

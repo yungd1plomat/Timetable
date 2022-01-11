@@ -37,25 +37,25 @@ namespace Timetable.BotCore.Commands.TextMessage
                 });
                 return;
             }
-
-            var lessons = db.Lessons.Where(x => x.Group == user.Group).ToList()
-                                    .Where(x => x.Teacher.ToLower().Contains(str) ||
-                                                 x.StartTime.ToString("HH:mm dd.MM.yyyy").Contains(str) ||
-                                                 x.Subject.ToLower().Contains(str))
-                                    .OrderBy(x => x.StartTime)
-                                    .Take(5);
-            string message = "ℹ Вот что мне удалось найти:\n\n";
-            if (lessons.Any())
-            {
-                foreach (var lesson in lessons)
-                {
-                    message += lesson.ToLongString();
-                    message += "\r\n\n";
-                }
-            } 
-            else
+            string message = "❌ Для начала установите свою группу.Если у вас нету меню напишите «Начать» ❌";
+            if (user.Group != null)
             {
                 message = "🕵 По вашему запросу ничего не найдено";
+                var lessons = db.Lessons.Where(x => x.Group == user.Group).ToList()
+                                        .Where(x => x.Teacher.ToLower().Contains(str) ||
+                                                     x.StartTime.ToString("HH:mm dd.MM.yyyy").Contains(str) ||
+                                                     x.Subject.ToLower().Contains(str))
+                                        .OrderBy(x => x.StartTime)
+                                        .Take(5);
+                if (lessons.Any())
+                {
+                    message = "ℹ Вот что мне удалось найти:\n\n";
+                    foreach (var lesson in lessons)
+                    {
+                        message += lesson.ToLongString();
+                        message += "\r\n\n";
+                    }
+                }
             }
             await vkApi.Messages.SendAsync(new MessagesSendParams()
             {
