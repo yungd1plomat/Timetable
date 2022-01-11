@@ -96,23 +96,18 @@ namespace Timetable.BotCore.Workers
 
         public async void SendNotifications(IEnumerable<Lesson> lessons)
         {
-            _logger.LogInformation("Начата рассылка в  " + DateTime.Now.ToString("HH:mm dd.MM.yyyy"));
+            _logger.LogInformation("Начата рассылка в " + DateTime.Now.ToString("HH:mm dd.MM.yyyy"));
             using (DatabaseContext db = new DatabaseContext())
             {
                 foreach (var lesson in lessons)
                 {
                     // Берём только userid
-                    var Users = db.Users.Include(x => x.Group)
+                    var chunksUsers = db.Users.Where(x => x.Group == lesson.Group && x.Subscribtion.HasValue)
                                               .ToList()
-                                              .Where(x => x.Group.GroupIdentifyId == lesson.Group.GroupIdentifyId &&
-                                                          x.Subscribtion.HasValue &&
-                                                          x.Subscribtion.Value > DateTime.Now)
-                                              .Select(x => x.UserId);
-                    if (Users != null && Users.Any())
+                                              .Where(x => x.Subscribtion > DateTime.Now)
+                                              .Select(x => x.UserId).Chunk(100);
+                    if (chunksUsers.Any())
                     {
-                        // Ограничение вк апи (100 юзеров за раз)
-                        var chunksUsers = Users.Chunk(100);
-
                         // Сообщение которое получит пользователь
                         string message = $"🔔 Через {beforeMinutes} минут у вас начинается занятие:\r\n\n{lesson.ToShortString()}";
 
