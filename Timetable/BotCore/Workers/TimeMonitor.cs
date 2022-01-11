@@ -57,6 +57,7 @@ namespace Timetable.BotCore.Workers
         {
             // Просчитываем будущее время
             var futureTime = DateTime.Now.AddMinutes(beforeMinutes);
+            _logger.LogInformation("Проверка времени " + futureTime.ToString("HH:mm dd.MM.yyyy"));
 
             // Смотрим соответствует ли текущее (будущее) время
             // времени начала пар
@@ -78,6 +79,7 @@ namespace Timetable.BotCore.Workers
 
                 if (allLessons.Any())
                 {
+                    _logger.LogInformation("Время прошло проверку " + futureTime.ToString("HH:mm dd.MM.yyyy"));
                     SendNotifications(allLessons);
                     db.Lessons.RemoveRange(allLessons);
                 }
@@ -94,20 +96,23 @@ namespace Timetable.BotCore.Workers
 
         public async void SendNotifications(IEnumerable<Lesson> lessons)
         {
+            _logger.LogInformation("Начата рассылка в  " + DateTime.Now.ToString("HH:mm dd.MM.yyyy"));
             using (DatabaseContext db = new DatabaseContext())
             {
                 foreach (var lesson in lessons)
                 {
-                    // Ограничение вк апи (100 юзеров за раз)
                     // Берём только userid
-                    var chunksUsers = db.Users.Include(x => x.Group)
+                    var Users = db.Users.Include(x => x.Group)
                                               .ToList()
-                                              .Where(x => x.Group.GroupIdentifyId == lesson.Group.GroupIdentifyId && 
-                                                          x.Subscribtion.HasValue && 
+                                              .Where(x => x.Group.GroupIdentifyId == lesson.Group.GroupIdentifyId &&
+                                                          x.Subscribtion.HasValue &&
                                                           x.Subscribtion.Value > DateTime.Now)
-                                              .Select(x => x.UserId).Chunk(100);
-                    if (chunksUsers != null && chunksUsers.Any())
+                                              .Select(x => x.UserId);
+                    if (Users != null && Users.Any())
                     {
+                        // Ограничение вк апи (100 юзеров за раз)
+                        var chunksUsers = Users.Chunk(100);
+
                         // Сообщение которое получит пользователь
                         string message = $"🔔 Через {beforeMinutes} минут у вас начинается занятие:\r\n\n{lesson.ToShortString()}";
 

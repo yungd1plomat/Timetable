@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using Timetable.BotCore.Abstractions;
+﻿using Timetable.BotCore.Abstractions;
 using Timetable.Helpers;
 using VkNet.Abstractions;
 using VkNet.Model;
