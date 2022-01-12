@@ -39,9 +39,7 @@ namespace Timetable.BotCore.Abstractions
         Task UpdateTimetable();
 
         /// <summary>
-        /// Удалить старые записи
-        /// По сути нужно только для первого запуска, т.к
-        /// после уведомления пользователей записи удаляются
+        /// Удалить старое расписание
         /// </summary>
         void ClearCache();
     }

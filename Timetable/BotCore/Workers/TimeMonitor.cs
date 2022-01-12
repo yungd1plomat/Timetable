@@ -81,8 +81,6 @@ namespace Timetable.BotCore.Workers
                 {
                     _logger.LogInformation("Время прошло проверку " + futureTime.ToString("HH:mm dd.MM.yyyy"));
                     SendNotifications(allLessons);
-                    db.Lessons.RemoveRange(allLessons);
-                    await db.SaveChangesAsync();
                 }
 
                 // Если текущее время соответствует времени обновления
