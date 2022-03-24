@@ -249,7 +249,7 @@ namespace Timetable.BotCore.Workers
                     if (group.Hash != hash) // Данные изменились (добавили новые занятия или убрали)
                     {
                         // Удаляем старые занятия
-                        var oldLessons = db.Lessons.Where(x => x.Group == group);
+                        var oldLessons = db.Lessons.Where(x => x.Group == group).ToList();
                         db.Lessons.RemoveRange(oldLessons);
 
                         var lessons = GetLessons(table, group);

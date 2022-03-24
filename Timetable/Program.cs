@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Timetable.BotCore.Workers;
 using Timetable.Helpers;
 
 namespace Timetable

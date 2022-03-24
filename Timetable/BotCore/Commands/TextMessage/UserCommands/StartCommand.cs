@@ -54,7 +54,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             var keyboard = user.admin.HasValue && user.admin.Value ? adminkeyboard : mainkeyboard;
             await vkApi.Messages.SendAsync(new MessagesSendParams()
             {
-                Message = "🎅 Добро пожаловать в AdoBot v2.0 🎅\n" +
+                Message = "👥 Добро пожаловать в AdoBot v2.0 👥\n" +
                           "\n" +
                           "▶ Мои возможности:\n" +
                           "\n" +
