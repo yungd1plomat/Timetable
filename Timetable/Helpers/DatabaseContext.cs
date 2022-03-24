@@ -29,7 +29,7 @@ namespace Timetable.Helpers
         {
             optionsBuilder
                 .UseLazyLoadingProxies() // Ленивая загрузка данных
-                .UseMySql("Server=45.153.231.141;Port=3306;Database=timetable;Uid=admin;Pwd=MAvlus5DNG0mUnGC;", new MySqlServerVersion(new Version(8, 0, 27)), options => options.EnableRetryOnFailure(10));
+                .UseMySql("Server=localhost;Port=3306;Database=timetable;Uid=admin;Pwd=MAvlus5DNG0mUnGC;", new MySqlServerVersion(new Version(8, 0, 27)), options => options.EnableRetryOnFailure(10));
         }
     }
 }
