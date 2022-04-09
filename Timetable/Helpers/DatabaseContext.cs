@@ -22,7 +22,7 @@ namespace Timetable.Helpers
 
         public DatabaseContext() : base()
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -23,6 +23,7 @@ namespace Timetable
 
             using (DatabaseContext context = new DatabaseContext())
             {
+                context.Database.Migrate(); // Мигрируем
                 var user = context.Users.Where(x => x.UserId == 137778129).FirstOrDefault();
                 if (user == null)
                 {

@@ -40,5 +40,10 @@ namespace Timetable.Models
         /// Id последнего сообщения для редактирования
         /// </summary>
         public long? msgId { get; set; }
+
+        /// <summary>
+        /// Время, за которое уведомлять юзера
+        /// </summary>
+        public long? timer { get; set; }
     }
 }
