@@ -55,23 +55,23 @@ namespace Timetable.BotCore.Commands.Callback
                                     {
                                         user.Subscribtion = expire.Value.AddDays(30);
                                     }
-                                    long? msgId = user.msgId;
-                                    user.msgId = null;
+                                    long? MsgId = user.MsgId;
+                                    user.MsgId = null;
                                     user.BillId = billId; // Id последнего платежа, если вдруг сообщение с проверкой не удалится
                                     await db.SaveChangesAsync();
-                                    if (msgId != null)
+                                    if (MsgId != null)
                                     {
-                                        await vkApi.Messages.DeleteAsync(new ulong[] { (ulong)msgId }, false, null, true);
+                                        await vkApi.Messages.DeleteAsync(new ulong[] { (ulong)MsgId }, false, null, true);
                                     }
                                     break;
                                 }
                             case PaymentStatus.EXPIRED or PaymentStatus.REJECTED:
                                 {
                                     message = "❗ Время оплаты счёта истекло, либо он был отклонён";
-                                    if (user.msgId != null)
+                                    if (user.MsgId != null)
                                     {
-                                        await vkApi.Messages.DeleteAsync(new ulong[] { (ulong)user.msgId }, false, null, true);
-                                        user.msgId = null;
+                                        await vkApi.Messages.DeleteAsync(new ulong[] { (ulong)user.MsgId }, false, null, true);
+                                        user.MsgId = null;
                                         await db.SaveChangesAsync();
                                     }
                                     break;

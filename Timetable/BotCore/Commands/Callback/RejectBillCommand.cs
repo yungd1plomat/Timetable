@@ -29,10 +29,10 @@ namespace Timetable.BotCore.Commands.Callback
                 try
                 {
                     await payment.RejectPayment(billId);
-                    if (user.msgId != null)
+                    if (user.MsgId != null)
                     {
-                        await vkApi.Messages.DeleteAsync(new ulong[] { (ulong)user.msgId }, false, null, true);
-                        user.msgId = null;
+                        await vkApi.Messages.DeleteAsync(new ulong[] { (ulong)user.MsgId }, false, null, true);
+                        user.MsgId = null;
                         await db.SaveChangesAsync();
                     }
                     message = "🌝 Счёт успешно отменён";

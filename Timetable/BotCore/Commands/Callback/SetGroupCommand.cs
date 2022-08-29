@@ -26,11 +26,11 @@ namespace Timetable.BotCore.Commands.Callback
 
             try
             {
-                await vkApi.Messages.DeleteAsync(new ulong[] { (ulong)user.msgId }, false, null, true); // Удаляем сообщение с выбором группы
+                await vkApi.Messages.DeleteAsync(new ulong[] { (ulong)user.MsgId }, false, null, true); // Удаляем сообщение с выбором группы
             } catch { }
 
             user.Group = group;
-            user.msgId = null;
+            user.MsgId = null;
             await db.SaveChangesAsync();
 
             await vkApi.Messages.SendAsync(new MessagesSendParams()

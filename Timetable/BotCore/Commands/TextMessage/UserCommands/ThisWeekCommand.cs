@@ -10,12 +10,12 @@ namespace Timetable.BotCore.Commands.TextMessage.UserCommands
 
         public Task Handle(object update, DatabaseContext db)
         {
-            
+            return Task.CompletedTask;
         }
 
         public bool IsMatch(object update, DatabaseContext db)
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }

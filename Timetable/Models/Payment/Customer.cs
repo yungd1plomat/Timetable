@@ -5,16 +5,16 @@
         /// <summary>
         /// Номер телефона пользователя (в международном формате)
         /// </summary>
-        public string phone { get; set; }
+        public string Phone { get; set; }
 
         /// <summary>
         /// E-mail пользователя
         /// </summary>
-        public string email { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// Идентификатор пользователя в вашей системе
         /// </summary>
-        public string account { get; set; }
+        public string Account { get; set; }
     }
 }

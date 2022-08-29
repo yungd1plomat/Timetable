@@ -70,8 +70,8 @@ namespace Timetable.Migrations
                     Subscribtion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     BillId = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    admin = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    msgId = table.Column<long>(type: "bigint", nullable: true)
+                    Admin = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    MsgId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {

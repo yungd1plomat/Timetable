@@ -54,7 +54,7 @@ namespace Timetable.BotCore
                     var response = await resp.Content.ReadAsStringAsync();
 
                     var responseData = JsonConvert.DeserializeObject<ResponseData>(response);
-                    switch (responseData.status.value)
+                    switch (responseData.Status.Value)
                     {
                         case "WAITING":
                             {
@@ -88,22 +88,22 @@ namespace Timetable.BotCore
             {
                 CreateBillRequest request = new CreateBillRequest()
                 {
-                    amount = new Amount()
+                    Amount = new Amount()
                     {
-                        currency = "RUB",
-                        value = 30.0m,
+                        Currency = "RUB",
+                        Value = 30.0m,
                     },
-                    expirationDateTime = DateTime.Now.AddMinutes(20),
-                    comment = "После оплаты счёта нажмите кнопку «Проверить», чтобы активировать подписку",
-                    customer = new Customer()
+                    ExpirationDateTime = DateTime.Now.AddMinutes(20),
+                    Comment = "После оплаты счёта нажмите кнопку «Проверить», чтобы активировать подписку",
+                    Customer = new Customer()
                     {
-                        account = GuId,
-                        email = "aynur.musin.06@mail.ru",
-                        phone = Number,
+                        Account = GuId,
+                        Email = "aynur.musin.06@mail.ru",
+                        Phone = Number,
                     },
-                    customFields = new CustomFields()
+                    CustomFields = new CustomFields()
                     {
-                        themeCode = ThemeCode,
+                        ThemeCode = ThemeCode,
                     },
                 };
                 string jsondata = JsonConvert.SerializeObject(request);

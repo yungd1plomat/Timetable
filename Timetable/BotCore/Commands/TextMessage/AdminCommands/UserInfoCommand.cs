@@ -35,12 +35,12 @@ namespace Timetable.BotCore.Commands.TextMessage
                 string message = "👤 Информации о пользователе не найдено";
                 if (user != null)
                 {
-                    var admin = user.admin.HasValue && user.admin.Value;
+                    var Admin = user.Admin.HasValue && user.Admin.Value;
                     var expires = user.Subscribtion.HasValue ? user.Subscribtion.Value.ToString("HH:mm dd.MM.yyyy") : null;
                     var billId = user.BillId;
                     var group = user.Group.GroupName;
                     message = "👤 Информация о пользователе:\n\n" +
-                              $"🔶 Админ: {admin}\n" +
+                              $"🔶 Админ: {Admin}\n" +
                               $"💰 Подписка: {expires}\n" +
                               $"🧾 Последний чек: {billId}\n" +
                               $"👥 Группа: {group}";
@@ -69,7 +69,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             if (msg != null)
             {
                 var user = db.Users.Where(x => x.UserId == msg.FromId).FirstOrDefault();
-                if (msg.Text.ToLower().Contains("/info") && user.admin == true)
+                if (msg.Text.ToLower().Contains("/info") && user.Admin == true)
                 {
                     return true;
                 }

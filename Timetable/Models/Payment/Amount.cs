@@ -7,11 +7,11 @@
         /// RUB - рубли
         /// KZT - тенге
         /// </summary>
-        public string currency { get; set; }
+        public string Currency { get; set; }
 
         /// <summary>
         /// Сумма, на которую выставляется счет, округленная в меньшую сторону до 2 десятичных знаков
         /// </summary>
-        public decimal value { get; set; }
+        public decimal Value { get; set; }
     }
 }

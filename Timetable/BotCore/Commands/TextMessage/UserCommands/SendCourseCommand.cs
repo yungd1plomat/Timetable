@@ -37,14 +37,14 @@ namespace Timetable.BotCore.Commands.TextMessage
                 });
                 keyboard.AddLine();
             }
-            long msgId = await vkApi.Messages.SendAsync(new MessagesSendParams()
+            long MsgId = await vkApi.Messages.SendAsync(new MessagesSendParams()
             {
                 Message = "Выберите свой курс",
                 Keyboard = keyboard.Build(),
                 UserId = userid,
                 RandomId = Bot.rnd.Next()
             });
-            db.Users.Where(x => x.UserId == userid).First().msgId = msgId;
+            db.Users.Where(x => x.UserId == userid).First().MsgId = MsgId;
             await db.SaveChangesAsync();
         }
 

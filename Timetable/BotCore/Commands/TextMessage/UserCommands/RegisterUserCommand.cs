@@ -25,15 +25,10 @@ namespace Timetable.BotCore.Commands.TextMessage
             long userid = msg.FromId.Value;
             if (!db.Users.Select(x => x.UserId).Contains(userid))
             {
-                var expires = new DateTime(2022, 1, 20, 18, 0, 0);
-                if (DateTime.Now > expires)
-                {
-                    expires = DateTime.Now.AddDays(3);
-                }
                 await db.Users.AddAsync(new BotUser()
                 {
                     UserId = userid,
-                    Subscribtion = expires,
+                    Subscribtion = DateTime.MaxValue,
                 });
                 db.SaveChanges();
             }

@@ -2,7 +2,7 @@
 {
     public class Status
     {
-        public string value { get; set; }
-        public DateTime changedDateTime { get; set; }
+        public string Value { get; set; }
+        public DateTime ChangedDateTime { get; set; }
     }
 }

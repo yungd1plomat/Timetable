@@ -5,51 +5,51 @@
         /// <summary>
         /// Ваш идентификатор в системе p2p.qiwi
         /// </summary>
-        public string siteId { get; set; }
+        public string SiteId { get; set; }
 
         /// <summary>
         /// Уникальный идентификатор счета в вашей системе, указанный при выставлении
         /// </summary>
-        public string billId { get; set; }
+        public string BillId { get; set; }
 
         /// <summary>
         /// Данные о сумме счета
         /// </summary>
-        public Amount amount { get; set; }
+        public Amount Amount { get; set; }
 
         /// <summary>
         /// Данные о статусе счета
         /// </summary>
-        public Status status { get; set; }
+        public Status Status { get; set; }
 
         /// <summary>
         /// Идентификаторы пользователя
         /// </summary>
-        public Customer customer { get; set; }
+        public Customer Customer { get; set; }
 
         /// <summary>
         /// Объект строковых дополнительных параметров, переданных вами
         /// </summary>
-        public CustomFields customFields { get; set; }
+        public CustomFields CustomFields { get; set; }
 
         /// <summary>
         /// Комментарий к счету
         /// </summary>
-        public string comment { get; set; }
+        public string Comment { get; set; }
 
         /// <summary>
         /// Системная дата создания счета
         /// </summary>
-        public DateTime creationDateTime { get; set; }
+        public DateTime CreationDateTime { get; set; }
 
         /// <summary>
         /// Срок действия созданной формы для перевода
         /// </summary>
-        public DateTime expirationDateTime { get; set; }
+        public DateTime ExpirationDateTime { get; set; }
 
         /// <summary>
         /// Ссылка для переадресации пользователя на созданную форму
         /// </summary>
-        public string payUrl { get; set; }
+        public string PayUrl { get; set; }
     }
 }

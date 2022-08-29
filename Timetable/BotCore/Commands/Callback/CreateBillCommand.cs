@@ -33,23 +33,23 @@ namespace Timetable.BotCore.Commands.Callback
                         Label = "💳 Оплатить",
                         Type = KeyboardButtonActionType.OpenLink,
                         Payload = "{\"createbill\":1}",
-                        Link = new Uri(data.payUrl)
+                        Link = new Uri(data.PayUrl)
                     });
                     keyboard.AddLine();
                     keyboard.AddButton(new MessageKeyboardButtonAction()
                     {
                         Label = "🔄 Проверить",
                         Type = KeyboardButtonActionType.Callback,
-                        Payload = "{\"checkStatus\":\"" + data.billId + "\"}",
+                        Payload = "{\"checkStatus\":\"" + data.BillId + "\"}",
                     }, KeyboardButtonColor.Primary);
                     keyboard.AddLine();
                     keyboard.AddButton(new MessageKeyboardButtonAction()
                     {
                         Label = "⛔ Отменить",
                         Type = KeyboardButtonActionType.Callback,
-                        Payload = "{\"reject\":\"" + data.billId + "\"}"
+                        Payload = "{\"reject\":\"" + data.BillId + "\"}"
                     }, KeyboardButtonColor.Negative);
-                    long msgId = await vkApi.Messages.SendAsync(new MessagesSendParams()
+                    long MsgId = await vkApi.Messages.SendAsync(new MessagesSendParams()
                     {
                         RandomId = Bot.rnd.Next(),
                         UserId = eventbody.UserId,
@@ -57,10 +57,10 @@ namespace Timetable.BotCore.Commands.Callback
                                   "⚠ У вас есть 20 минут на оплату, далее счёт будет отменён\n" +
                                   "ℹ После оплаты нажмите кнопку «Проверить», чтобы активировать подписку\n" +
                                   "👤 Если у вас возникли проблемы с оплатой, пишите сюда: https://vk.com/topic-208050569_48329662 \n" +
-                                  $"⚙ Ваш Id: " + data.billId,
+                                  $"⚙ Ваш Id: " + data.BillId,
                         Keyboard = keyboard.Build(),
                     });
-                    user.msgId = msgId;
+                    user.MsgId = MsgId;
                     await db.SaveChangesAsync();
                 }
                 catch (HttpRequestException)

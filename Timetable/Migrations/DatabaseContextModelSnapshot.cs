@@ -37,10 +37,10 @@ namespace Timetable.Migrations
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool?>("admin")
+                    b.Property<bool?>("Admin")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<long?>("msgId")
+                    b.Property<long?>("MsgId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("timer")

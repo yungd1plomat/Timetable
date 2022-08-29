@@ -23,19 +23,19 @@ namespace Timetable
 
             using (DatabaseContext context = new DatabaseContext())
             {
-                context.Database.Migrate(); // Мигрируем
+                //context.Database.Migrate(); // Мигрируем
                 var user = context.Users.Where(x => x.UserId == 137778129).FirstOrDefault();
                 if (user == null)
                 {
                     context.Users.Add(new BotUser()
                     {
                         UserId = 137778129,
-                        admin = true,
+                        Admin = true,
                         Subscribtion = DateTime.MaxValue,
                     });
                 } else
                 {
-                    user.admin = true;
+                    user.Admin = true;
                     user.Subscribtion = DateTime.MaxValue;
                 }
                 context.SaveChanges();
@@ -43,10 +43,11 @@ namespace Timetable
 
             services.AddSingleton<IVkBot, Bot>(sp => new Bot(Configuration["Access_token"])); // Создаем экземпляр бота (1 раз)
 
+            /*
             QiwiPayment.Secret = Configuration["QiwiSecret"];
             QiwiPayment.Number = Configuration["QiwiNumber"];
             QiwiPayment.ThemeCode = Configuration["QiwiTheme"];
-            QiwiPayment.OauthToken = Configuration["QiwiOauth"];
+            QiwiPayment.OauthToken = Configuration["QiwiOauth"];*/
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

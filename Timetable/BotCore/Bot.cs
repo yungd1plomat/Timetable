@@ -48,7 +48,7 @@ namespace Timetable.BotCore
             _registerUserCommand = new RegisterUserCommand(_vkApi);
             vkBotTextCommands = new IVkBotCommand[]
             {
-                new SubscribeCommand(_vkApi),
+                //new SubscribeCommand(_vkApi),
                 new StartCommand(_vkApi),
                 new SendCourseCommand(_vkApi),
                 new GetTimetableCommand(_vkApi),
@@ -67,19 +67,18 @@ namespace Timetable.BotCore
                 new SendFakultyCommand(_vkApi),
                 new SendGroupsCommand(_vkApi),
                 new SetGroupCommand(_vkApi),
-                new CreateBillCommand(_vkApi),
+                /*new CreateBillCommand(_vkApi),
                 new CheckBillCommand(_vkApi),
-                new RejectBillCommand(_vkApi),
+                new RejectBillCommand(_vkApi),*/
             };
             _monitor.StartMonitoring();
         }
 
         public void Authorize(string accessToken)
         {
-            if (accessToken.Length != 85) // метод VkApi.Authorize не проверяет токен на валидность
-            {
-                throw new ArgumentException("Invalid Access Token");
-            }
+            // Вк теперь генерирует токены случайной длины, проверять валидность токена
+            // по длине было далбаебским решением
+            // * можно дернуть какой нибудь метод вк чтобы чекнуть токен на валид
             _vkApi.Authorize(new ApiAuthParams()
             {
                 AccessToken = accessToken

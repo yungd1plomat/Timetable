@@ -34,7 +34,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 var user = db.Users.Where(x => x.UserId == userid).FirstOrDefault();
                 if (user != null)
                 {
-                    user.admin = false;
+                    user.Admin = false;
                     user.Subscribtion = DateTime.Now.AddDays(1);
                     await vkApi.Messages.SendAsync(new MessagesSendParams()
                     {
@@ -69,7 +69,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             {
                 var user = db.Users.Where(x => x.UserId == msg.FromId).FirstOrDefault();
                 string text = msg.Text.ToLower();
-                if (text.Contains("/removeadmin") && user.admin == true)
+                if (text.Contains("/removeAdmin") && user.Admin == true)
                 {
                     return true;
                 }

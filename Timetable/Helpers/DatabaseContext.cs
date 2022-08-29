@@ -22,14 +22,14 @@ namespace Timetable.Helpers
 
         public DatabaseContext() : base()
         {
-            //Database.EnsureCreated();
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
                 .UseLazyLoadingProxies() // Ленивая загрузка данных
-                .UseMySql("Server=localhost;Port=3306;Database=timetable;Uid=admin;Pwd=MAvlus5DNG0mUnGC;", new MySqlServerVersion(new Version(8, 0, 27)), options => options.EnableRetryOnFailure(10));
+                .UseMySql("Server=localhost;Port=3306;Database=timetable;Uid=admin;Pwd=Wnqruw3Psd;", new MySqlServerVersion(new Version(8, 0, 27)), options => options.EnableRetryOnFailure(10));
         }
     }
 }

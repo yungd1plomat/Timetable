@@ -69,12 +69,12 @@ namespace Timetable.BotCore.Commands.Callback
                 });
             }
 
-            long? msgId = db.Users.Where(x => x.UserId == eventbody.UserId).First().msgId;
+            long? MsgId = db.Users.Where(x => x.UserId == eventbody.UserId).First().MsgId;
 
             await vkApi.Messages.EditAsync(new MessageEditParams()
             {
                 Message = $"[{page}] Выберите свою группу",
-                MessageId = msgId,
+                MessageId = MsgId,
                 PeerId = (long)eventbody.PeerId,
                 Keyboard = keyboard.Build(),
             });

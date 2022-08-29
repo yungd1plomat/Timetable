@@ -5,28 +5,28 @@
         /// <summary>
         /// Данные о сумме счета
         /// </summary>
-        public Amount amount { get; set; }
+        public Amount Amount { get; set; }
 
         /// <summary>
         /// Комментарий к счету
         /// </summary>
-        public string comment { get; set; }
+        public string Comment { get; set; }
 
         /// <summary>
         /// Дата, до которой счет будет доступен для оплаты. 
         /// Если перевод не будет совершен до этой даты, 
         /// ему присваивается финальный статус EXPIRED и последующий перевод станет невозможен.
         /// </summary>
-        public DateTime expirationDateTime { get; set; }
+        public DateTime ExpirationDateTime { get; set; }
 
         /// <summary>
         /// Идентификаторы пользователя
         /// </summary>
-        public Customer customer { get; set; }
+        public Customer Customer { get; set; }
 
         /// <summary>
         /// Дополнительные данные счета. Вы можете здесь передавать свои дополнительные поля с данными, например, SteamId
         /// </summary>
-        public CustomFields customFields { get; set; }
+        public CustomFields CustomFields { get; set; }
     }
 }

@@ -15,7 +15,8 @@ namespace Timetable.BotCore.Commands.TextMessage
     {
         private MessageKeyboard mainkeyboard { get; set; } // Кнопки меню
 
-        private MessageKeyboard adminkeyboard { get; set; }
+        private MessageKeyboard Adminkeyboard { get; set; }
+
         public IVkApi vkApi {get;set;}
 
         public StartCommand(IVkApi vkApi)
@@ -28,11 +29,11 @@ namespace Timetable.BotCore.Commands.TextMessage
                                 .AddButton("👀 Послезавтра", "after_tomorrow", KeyboardButtonColor.Primary)
                                 .AddLine()
                                 .AddButton("👥 Установить группу", "setgroup", KeyboardButtonColor.Positive)
-                                .AddLine()
-                                .AddButton("💰 Подписка", "subscribe", KeyboardButtonColor.Positive)
+                                //.AddLine()
+                                //.AddButton("💰 Подписка", "subscribe", KeyboardButtonColor.Positive)
                                 .SetInline(false)
                                 .Build();
-            adminkeyboard = new KeyboardBuilder().AddButton("✍🏻 Сегодня", "today", KeyboardButtonColor.Positive)
+            Adminkeyboard = new KeyboardBuilder().AddButton("✍🏻 Сегодня", "today", KeyboardButtonColor.Positive)
                                 .AddButton("🔍 Поиск", "find", KeyboardButtonColor.Default)
                                 .AddLine()
                                 .AddButton("👁 Завтра", "tomorrow", KeyboardButtonColor.Primary)
@@ -51,7 +52,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             var msg = update as Message;
             long userid = msg.FromId.Value;
             var user = db.Users.Where(x => x.UserId == userid).FirstOrDefault();
-            var keyboard = user.admin.HasValue && user.admin.Value ? adminkeyboard : mainkeyboard;
+            var keyboard = user.Admin.HasValue && user.Admin.Value ? Adminkeyboard : mainkeyboard;
             await vkApi.Messages.SendAsync(new MessagesSendParams()
             {
                 Message = "👥 Добро пожаловать в AdoBot v2.0 👥\n" +
@@ -67,7 +68,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                           "💎 Возможность поиска ближайшего предмета по преподавателю, предмету, времени или аудитории" +
                           "\n" +
                           "\n" +
-                          "⌛ Первые 3 дня пользования ботом бесплатны, далее подписка будет стоить 30 руб/мес",
+                          "⌛ Пользование ботом бесплатно, поддержать https://vk.com/donut/adobot",
                 RandomId = Bot.rnd.Next(),
                 UserId = userid,
                 Keyboard = keyboard,

@@ -55,7 +55,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             if (msg != null)
             {
                 var user = db.Users.Where(x => x.UserId == msg.FromId).FirstOrDefault();
-                if (msg.Text.ToLower().Contains("статистика") && user.admin == true)
+                if (msg.Text.ToLower().Contains("статистика") && user.Admin == true)
                 {
                     return true;
                 }

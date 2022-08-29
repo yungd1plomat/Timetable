@@ -77,7 +77,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             {
                 var user = db.Users.Where(x => x.UserId == msg.FromId).FirstOrDefault();
                 string text = msg.Text.ToLower();
-                if (text.Contains("/delete") && user.admin == true)
+                if (text.Contains("/delete") && user.Admin == true)
                 {
                     return true;
                 }

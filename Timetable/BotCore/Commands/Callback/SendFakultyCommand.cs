@@ -38,11 +38,11 @@ namespace Timetable.BotCore.Commands.Callback
                 }
                 keyboard.AddLine();
             }
-            long? msgId = db.Users.Where(x => x.UserId == eventbody.UserId).First().msgId;
+            long? MsgId = db.Users.Where(x => x.UserId == eventbody.UserId).First().MsgId;
             await vkApi.Messages.EditAsync(new MessageEditParams()
             {
                 Message = "Выберите свой факультет",
-                MessageId = msgId,
+                MessageId = MsgId,
                 PeerId = (long)eventbody.PeerId,
                 Keyboard = keyboard.Build(),
             });

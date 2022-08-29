@@ -91,7 +91,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             {
                 var user = db.Users.Where(x => x.UserId == msg.FromId).FirstOrDefault();
                 string text = msg.Text.ToLower();
-                if (text.Contains("/add")   && user.admin == true)
+                if (text.Contains("/add")   && user.Admin == true)
                 {
                     return true;
                 }

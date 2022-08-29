@@ -20,8 +20,8 @@ namespace Timetable.BotCore.Commands.TextMessage
         }
 
         private const string HelpMessage = "Команды админа:\n" +
-                                           "1) /addadmin https://vk.com/durov - добавить нового админа (ссылка на страницу)\n" +
-                                           "2) /removeadmin https://vk.com/durov - удалить админа (ссылка на страницу)\n" +
+                                           "1) /addAdmin https://vk.com/durov - добавить нового админа (ссылка на страницу)\n" +
+                                           "2) /removeAdmin https://vk.com/durov - удалить админа (ссылка на страницу)\n" +
                                            "3) /add https://vk.com/durov 30 - добавить дней подписки (ссылка на страницу и кол-во дней)\n" +
                                            "4) /delete https://vk.com/durov 30 - убрать дней подписки (ссылка на страницу и кол-во дней)\n" +
                                            "5)/info https://vk.com/durov - Информация о пользователе\n";
@@ -44,7 +44,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             {
                 var user = db.Users.Where(x => x.UserId == msg.FromId).FirstOrDefault();
                 string text = msg.Text.ToLower();
-                if (text.Contains(@"¯\_(ツ)_/¯") && user.admin == true)
+                if (text.Contains(@"¯\_(ツ)_/¯") && user.Admin == true)
                 {
                     return true;
                 }

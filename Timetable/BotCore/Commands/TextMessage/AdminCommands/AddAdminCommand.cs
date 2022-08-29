@@ -36,7 +36,7 @@ namespace Timetable.BotCore.Commands.TextMessage
 
                 if (user != null)
                 {
-                    user.admin = true;
+                    user.Admin = true;
                     user.Subscribtion = DateTime.MaxValue;
                     await vkApi.Messages.SendAsync(new MessagesSendParams()
                     {
@@ -50,7 +50,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                     await db.Users.AddAsync(new BotUser()
                     {
                         UserId = userid,
-                        admin = true,
+                        Admin = true,
                         Subscribtion = DateTime.MaxValue,
                     });
                 }
@@ -80,7 +80,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             {
                 var user = db.Users.Where(x => x.UserId == msg.FromId).FirstOrDefault();
                 string text = msg.Text.ToLower();
-                if (text.Contains("/addadmin") && user.admin == true)
+                if (text.Contains("/addAdmin") && user.Admin == true)
                 {
                     return true;
                 }

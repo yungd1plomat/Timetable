@@ -5,6 +5,6 @@
         /// <summary>
         /// Настройка персонализации вашей формы
         /// </summary>
-        public string themeCode { get; set; }
+        public string ThemeCode { get; set; }
     }
 }

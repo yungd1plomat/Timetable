@@ -34,16 +34,16 @@ namespace Timetable.Models
         /// <summary>
         /// Является ли пользователь админом
         /// </summary>
-        public bool? admin { get; set; }
+        public bool? Admin { get; set; }
 
         /// <summary>
         /// Id последнего сообщения для редактирования
         /// </summary>
-        public long? msgId { get; set; }
+        public long? MsgId { get; set; }
 
         /// <summary>
         /// Время, за которое уведомлять юзера
         /// </summary>
-        public long? timer { get; set; }
+        public long? Timer { get; set; }
     }
 }
