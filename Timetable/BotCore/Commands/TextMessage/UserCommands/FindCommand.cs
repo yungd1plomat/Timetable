@@ -53,6 +53,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                         message += lesson.ToLongString();
                         message += "\r\n\n";
                     }
+                    message += "☝* показаны только первые 5 результатов";
                 }
             }
             await vkApi.Messages.SendAsync(new MessagesSendParams()
@@ -66,11 +67,7 @@ namespace Timetable.BotCore.Commands.TextMessage
         public bool IsMatch(object update, DatabaseContext db)
         {
             var msg = update as Message;
-            if (msg.Text != null && msg.Text.Length > 0)
-            {
-                return true;
-            }    
-            return false;
+            return msg.Text != null && msg.Text.Length > 0;
         }
     }
 }

@@ -51,11 +51,7 @@ namespace Timetable.BotCore.Commands.TextMessage
         public bool IsMatch(object update, DatabaseContext db)
         {
             var msg = update as Message;
-            if (msg != null && msg.Text.ToLower().Contains("установить группу"))
-            {
-                return true;
-            }
-            return false;
+            return msg != null && msg.Text.ToLower().Contains("установить группу");
         }
     }
 }

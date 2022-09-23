@@ -37,11 +37,7 @@ namespace Timetable.BotCore.Commands.TextMessage
         public bool IsMatch(object update, DatabaseContext db)
         {
             var msg = update as Message;
-            if (msg != null && !db.Users.Select(x => x.UserId).Contains(msg.FromId.Value))
-            {
-                return true;
-            }
-            return false;
+            return msg != null && !db.Users.Select(x => x.UserId).Contains(msg.FromId.Value);
         }
     }
 }

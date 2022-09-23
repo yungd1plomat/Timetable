@@ -80,13 +80,9 @@ namespace Timetable.BotCore.Commands.TextMessage
         public bool IsMatch(object update, DatabaseContext db)
         {
             var message = update as Message;
-            if (message != null && (message.Text.ToLower().Contains("сегодня") 
-                                 || message.Text.ToLower().Contains("завтра")
-                                 || message.Text.ToLower().Contains("послезавтра")))
-            {
-                return true;
-            }
-            return false;
+            return message != null && (message.Text.ToLower().Contains("сегодня") ||
+                                      message.Text.ToLower().Contains("завтра") || 
+                                      message.Text.ToLower().Contains("послезавтра"));
         }
     }
 }

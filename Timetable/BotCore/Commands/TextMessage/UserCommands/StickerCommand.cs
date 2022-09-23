@@ -45,11 +45,7 @@ namespace Timetable.BotCore.Commands.TextMessage
         public bool IsMatch(object update, DatabaseContext db)
         {
             var msg = update as Message;
-            if (msg == null || msg.Text == null || msg.Text == "")
-            {
-                return true;
-            }
-            return false;
+            return msg == null || string.IsNullOrEmpty(msg.Text);
         }
     }
 }

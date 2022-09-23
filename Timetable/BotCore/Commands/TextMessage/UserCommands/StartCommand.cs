@@ -28,6 +28,10 @@ namespace Timetable.BotCore.Commands.TextMessage
                                 .AddButton("👁 Завтра", "tomorrow", KeyboardButtonColor.Primary)
                                 .AddButton("👀 Послезавтра", "after_tomorrow", KeyboardButtonColor.Primary)
                                 .AddLine()
+                                .AddButton("🕗 Текущая неделя", "this_week", KeyboardButtonColor.Primary)
+                                .AddLine()
+                                .AddButton("🕓 Следующая неделя", "next_week", KeyboardButtonColor.Primary)
+                                .AddLine()
                                 .AddButton("👥 Установить группу", "setgroup", KeyboardButtonColor.Positive)
                                 //.AddLine()
                                 //.AddButton("💰 Подписка", "subscribe", KeyboardButtonColor.Positive)
@@ -79,11 +83,7 @@ namespace Timetable.BotCore.Commands.TextMessage
         public bool IsMatch(object update, DatabaseContext db)
         {
             var msg = update as Message;
-            if (msg != null && msg.Text.ToLower().Contains("начать"))
-            {
-                return true;
-            }
-            return false;
+            return msg != null && msg.Text.ToLower().Contains("начать");
         }
     }
 }
