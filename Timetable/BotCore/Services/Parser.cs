@@ -34,7 +34,7 @@ namespace Timetable.BotCore.Workers
 
         public void ClearCache()
         {
-            var old = db.Lessons.Where(x => x.StartTime < DateTime.Now);
+            var old = db.Lessons.Where(x => x.StartTime < DtExtensions.LocalTimeNow());
             db.Lessons.RemoveRange(old);
             db.SaveChanges();
         }
@@ -169,7 +169,7 @@ namespace Timetable.BotCore.Workers
                         {
                             // Извлекаем дату
                             DateTime tmp = DateTime.ParseExact(row.ChildNodes[2].InnerText, "dd.MM.yyyy", null).Date;
-                            if (tmp >= DateTime.Now.Date) // Не берем прошедшие занятия
+                            if (tmp >= DtExtensions.LocalTimeNow().Date) // Не берем прошедшие занятия
                             {
                                 LastDate = tmp;
                             }
@@ -221,7 +221,7 @@ namespace Timetable.BotCore.Workers
             // Осенний - 1
             // Весенний - 2
             // Поэтому считаем, что до НГ - 1 семестр, после - 2
-            int semester = (DateTime.Now.Month > 8) ? 1 : 2;
+            int semester = (DtExtensions.LocalTimeNow().Month > 8) ? 1 : 2;
 
             HttpClient client = new HttpClient();
             ConfigureHeaders(ref client, 0);

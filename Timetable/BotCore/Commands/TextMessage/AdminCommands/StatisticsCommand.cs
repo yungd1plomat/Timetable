@@ -25,8 +25,8 @@ namespace Timetable.BotCore.Commands.TextMessage
             var users = db.Users.Select(x => new {Subscription = x.Subscribtion, BillId = x.BillId});
 
             int usercount = users.Count();
-            int subscribeUsers = users.Where(x => x.Subscription > DateTime.Now).Count();
-            int paidUsers = users.Where(x => x.BillId != null && x.Subscription > DateTime.Now).Count();
+            int subscribeUsers = users.Where(x => x.Subscription > DtExtensions.LocalTimeNow()).Count();
+            int paidUsers = users.Where(x => x.BillId != null && x.Subscription > DtExtensions.LocalTimeNow()).Count();
             double balance = 0;
             using (QiwiPayment client = new QiwiPayment())
             {
@@ -45,7 +45,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             {
                 Message = message,
                 UserId = userid,
-                RandomId = Bot.rnd.Next(),
+                RandomId = ConcurrentRandom.Next(),
             });
         }
 

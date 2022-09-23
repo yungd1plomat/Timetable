@@ -35,7 +35,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             long userid = msg.FromId.Value;
             DateTime? expiration = db.Users.Where(x => x.UserId == userid).First().Subscribtion;
             string message;
-            if (expiration.HasValue && expiration > DateTime.Now)
+            if (expiration.HasValue && expiration > DtExtensions.LocalTimeNow())
             {
                 message = $"💎 Ваша подписка активна до {expiration.Value.ToString("HH:mm dd.MM.yyyy")}";
             }
@@ -46,7 +46,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             await vkApi.Messages.SendAsync(new MessagesSendParams()
             {
                 Message = message,
-                RandomId = Bot.rnd.Next(),
+                RandomId = ConcurrentRandom.Next(),
                 UserId = userid,
                 Keyboard = subscribekey,
             });
@@ -59,7 +59,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             {
                 long userid = msg.FromId.Value;
                 DateTime? expiration = db.Users.Where(x => x.UserId == userid).First().Subscribtion;
-                if (msg.Text.ToLower().Contains("подписка") || !expiration.HasValue || expiration.Value < DateTime.Now)
+                if (msg.Text.ToLower().Contains("подписка") || !expiration.HasValue || expiration.Value < DtExtensions.LocalTimeNow())
                 {
                     return true;
                 }

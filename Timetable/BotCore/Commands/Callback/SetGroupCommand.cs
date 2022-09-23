@@ -35,7 +35,7 @@ namespace Timetable.BotCore.Commands.Callback
 
             await vkApi.Messages.SendAsync(new MessagesSendParams()
             {
-                RandomId = Bot.rnd.Next(),
+                RandomId = ConcurrentRandom.Next(),
                 UserId = (long)eventbody.UserId,
                 Message = "✅ Вы успешно установили группу " + group.GroupName
             });

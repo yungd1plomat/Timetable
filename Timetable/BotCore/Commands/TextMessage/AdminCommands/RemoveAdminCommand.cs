@@ -35,12 +35,12 @@ namespace Timetable.BotCore.Commands.TextMessage
                 if (user != null)
                 {
                     user.Admin = false;
-                    user.Subscribtion = DateTime.Now.AddDays(1);
+                    user.Subscribtion = DtExtensions.LocalTimeNow().AddDays(1);
                     await vkApi.Messages.SendAsync(new MessagesSendParams()
                     {
                         Message = "🥺 Вас сняли с администратора :(\nНапишите «Начать», чтобы вернуть обычное меню",
                         UserId = userid,
-                        RandomId = Bot.rnd.Next(),
+                        RandomId = ConcurrentRandom.Next(),
                     });
                     await db.SaveChangesAsync();
                 }
@@ -48,7 +48,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = $"☑ Пользователь {screen_name} успешно снят с администратора",
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
             catch
@@ -57,7 +57,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = "Произошла ошибка при выполнении команды, проверьте синтаксис",
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
         }

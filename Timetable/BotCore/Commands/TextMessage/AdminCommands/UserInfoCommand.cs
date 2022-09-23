@@ -49,7 +49,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = message,
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
             catch
@@ -58,7 +58,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = "Произошла ошибка при выполнении команды, проверьте синтаксис",
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
         }

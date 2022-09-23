@@ -1,12 +1,27 @@
-﻿using Timetable.Models;
+﻿using System;
+using Timetable.Models;
 
 namespace Timetable.Helpers
 {
     /// <summary>
     /// Расширения для работы бота
     /// </summary>
-    public static class Extensions
+    public static class DtExtensions
     {
+        /// <summary>
+        /// Количество дней в рабочей недели (пн-сб)
+        /// </summary>
+        private const int dayInWeek = 6;
+
+        /// <summary>
+        /// Преобразование к времени ЕКБ (+5)
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns>Текущее время в часовом поясе +5</returns>
+        public static DateTime LocalTimeNow()
+        {
+            return DateTime.UtcNow.AddHours(5);
+        }
 
         /// <summary>
         /// Сменить время (Timespan) класса DateTime
@@ -42,6 +57,36 @@ namespace Timetable.Helpers
         {
             return currentTime.Hours == time.Hours &&
                    currentTime.Minutes == time.Minutes;
+        }
+
+        /// <summary>
+        /// Возвращает список всех рабочих дней недели
+        /// для текущей даты
+        /// </summary>
+        /// <param name="dateTime">
+        /// Дата, дни недели которой необходимо определить
+        /// </param>
+        /// <returns>
+        /// Диапазон из 6 дней (пн - сб) в которой
+        /// находится текущая дата
+        /// </returns>
+        public static IEnumerable<DateTime> GetWeekDays(this DateTime dateTime)
+        {
+            /*
+            Sunday = 0,
+            Monday = 1,
+            Tuesday = 2,
+            Wednesday = 3,
+            Thursday = 4,
+            Friday = 5,
+            Saturday = 6*/
+
+            int daysToFirst = 1 - (int)dateTime.DayOfWeek;
+            DateTime firstDay = dateTime.AddDays(daysToFirst);
+            for (int i = 0; i < dayInWeek; i++)
+            {
+                yield return firstDay.AddDays(i);
+            }
         }
     }
 }

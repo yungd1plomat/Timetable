@@ -30,7 +30,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 await vkApi.Messages.SendAsync(new MessagesSendParams()
                 {
                     UserId = (long)msg.FromId,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                     Message = "🔍 Введите строку поиска (название предмета,преподавателя или времени) и мы найдем ближайшие пары",
                 });
                 return;
@@ -60,7 +60,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             {
                 UserId = userid,
                 Message = message,
-                RandomId = Bot.rnd.Next(),
+                RandomId = ConcurrentRandom.Next(),
             });
         }
 

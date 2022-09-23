@@ -40,7 +40,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 if (user != null)
                 {
                     var expires = user.Subscribtion;
-                    if (expires.HasValue && expires.Value > DateTime.Now)
+                    if (expires.HasValue && expires.Value > DtExtensions.LocalTimeNow())
                     {
                         user.Subscribtion = expires.Value.AddDays(-days);
                     }
@@ -48,7 +48,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                     {
                         Message = $"➖ Вам убрали {days} дней подписки",
                         UserId = userid,
-                        RandomId = Bot.rnd.Next(),
+                        RandomId = ConcurrentRandom.Next(),
                     });
                 }
                 await db.SaveChangesAsync();
@@ -56,7 +56,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = $"☑ Пользователю {screen_name} успешно убрано {days} дней подписки",
                     UserId = (long)msg.FromId,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
             catch
@@ -65,7 +65,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = "Произошла ошибка при выполнении команды, проверьте синтаксис",
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
         }

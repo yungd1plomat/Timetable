@@ -24,12 +24,12 @@ namespace Timetable.BotCore.Abstractions
         /// <summary>
         /// Все текстовые команды Бота для обработки текстовых сообщений
         /// </summary>
-        IVkBotCommand[] vkBotTextCommands { get; set; }
+        IEnumerable<IVkBotCommand> vkBotTextCommands { get; set; }
 
         /// <summary>
         /// Все callback команды Бота для обработки нажатия на кнопки
         /// </summary>
-        IVkBotCommand[] vkBotCallbackCommands { get; set; }
+        IEnumerable<IVkBotCommand> vkBotCallbackCommands { get; set; }
 
         /// <summary>
         /// Устанавливает токен авторизации для VkApi

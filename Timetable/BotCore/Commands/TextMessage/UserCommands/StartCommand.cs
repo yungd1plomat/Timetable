@@ -43,6 +43,10 @@ namespace Timetable.BotCore.Commands.TextMessage
                                 .AddButton("👁 Завтра", "tomorrow", KeyboardButtonColor.Primary)
                                 .AddButton("👀 Послезавтра", "after_tomorrow", KeyboardButtonColor.Primary)
                                 .AddLine()
+                                .AddButton("🕗 Текущая неделя", "this_week", KeyboardButtonColor.Primary)
+                                .AddLine()
+                                .AddButton("🕓 Следующая неделя", "next_week", KeyboardButtonColor.Primary)
+                                .AddLine()
                                 .AddButton("👥 Установить группу", "setgroup", KeyboardButtonColor.Positive)
                                 .AddLine()
                                 .AddButton("📈 Статистика", "statistics", KeyboardButtonColor.Positive)
@@ -63,17 +67,19 @@ namespace Timetable.BotCore.Commands.TextMessage
                           "\n" +
                           "▶ Мои возможности:\n" +
                           "\n" +
-                          "💥 Оповещение за 15 минут до пары" +
+                          "💥 Оповещение о паре за указанное кол-во минут" +
                           "\n" +
                           "🕧 Автообновление расписания каждый день" +
                           "\n" +
                           "⚡ Возможность посмотреть расписание на сегодня, завтра и послезавтра" +
                           "\n" +
+                          "📅 Возможность генерации расписания на текущую и следующую неделю" +
+                          "\n" +
                           "💎 Возможность поиска ближайшего предмета по преподавателю, предмету, времени или аудитории" +
                           "\n" +
                           "\n" +
                           "⌛ Пользование ботом бесплатно, поддержать https://vk.com/donut/adobot",
-                RandomId = Bot.rnd.Next(),
+                RandomId = ConcurrentRandom.Next(),
                 UserId = userid,
                 Keyboard = keyboard,
             });

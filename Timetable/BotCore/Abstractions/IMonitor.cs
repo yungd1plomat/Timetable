@@ -23,7 +23,7 @@ namespace Timetable.BotCore.Abstractions
         /// <summary>
         /// Время начала пар, для того чтобы каждый раз не делать запрос к бд
         /// </summary>
-        IEnumerable<TimeSpan> _intervals { get; set; }
+        IEnumerable<TimeSpan> Intervals { get; set; }
 
         /// <summary>
         /// Начать следить за временем

@@ -51,7 +51,7 @@ namespace Timetable.BotCore.Commands.Callback
                     }, KeyboardButtonColor.Negative);
                     long MsgId = await vkApi.Messages.SendAsync(new MessagesSendParams()
                     {
-                        RandomId = Bot.rnd.Next(),
+                        RandomId = ConcurrentRandom.Next(),
                         UserId = eventbody.UserId,
                         Message = "💰 Счёт на оплату сформирован\n" +
                                   "⚠ У вас есть 20 минут на оплату, далее счёт будет отменён\n" +
@@ -67,7 +67,7 @@ namespace Timetable.BotCore.Commands.Callback
                 {
                     await vkApi.Messages.SendAsync(new MessagesSendParams()
                     {
-                        RandomId = Bot.rnd.Next(),
+                        RandomId = ConcurrentRandom.Next(),
                         UserId = eventbody.UserId,
                         Message = "⛔ Произошла ошибка при формировании счета, попробуйте ещё раз"
                     });

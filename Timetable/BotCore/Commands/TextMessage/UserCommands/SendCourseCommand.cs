@@ -42,7 +42,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 Message = "Выберите свой курс",
                 Keyboard = keyboard.Build(),
                 UserId = userid,
-                RandomId = Bot.rnd.Next()
+                RandomId = ConcurrentRandom.Next()
             });
             db.Users.Where(x => x.UserId == userid).First().MsgId = MsgId;
             await db.SaveChangesAsync();

@@ -47,9 +47,9 @@ namespace Timetable.BotCore.Commands.Callback
                                 {
                                     message = "🔥 Ваша подписка была продлена на 30 дней";
                                     var expire = user.Subscribtion;
-                                    if (expire < DateTime.Now) // Если подписка истекла, то добавляем к сегодняшнему дню
+                                    if (expire < DtExtensions.LocalTimeNow()) // Если подписка истекла, то добавляем к сегодняшнему дню
                                     {
-                                        user.Subscribtion = DateTime.Now.AddDays(30);
+                                        user.Subscribtion = DtExtensions.LocalTimeNow().AddDays(30);
                                     }
                                     else // Если подписка активна, добавляем ещё 30 дней
                                     {

@@ -37,8 +37,8 @@ namespace Timetable.BotCore.Commands.TextMessage
             await vkApi.CallAsync("messages.send", new VkParameters()
             {
                 {"user_id", userid },
-                {"random_id", Bot.rnd.Next() },
-                {"attachment", gifs[Bot.rnd.Next(0, gifs.Length - 1)] },
+                {"random_id", ConcurrentRandom.Next() },
+                {"attachment", gifs[ConcurrentRandom.Next(0, gifs.Length - 1)] },
             });
         }
 

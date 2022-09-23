@@ -11,15 +11,13 @@ namespace Timetable.BotCore.Workers
     public class TimeMonitor : IMonitor
     {
         public IVkApi _vkApi { get; set; }
+
         public Timer timer { get; set; }
-        public IEnumerable<TimeSpan> _intervals { get; set; }
+
+        public IEnumerable<TimeSpan> Intervals { get; set; }
+
 
         private readonly ILogger _logger;
-
-        /// <summary>
-        /// Нужно для сообщений Вконтакте
-        /// </summary>
-        private readonly Random rnd = new Random();
         
         /// <summary>
         /// За сколько минут придет уведомление
@@ -41,12 +39,12 @@ namespace Timetable.BotCore.Workers
         {
             _vkApi = api;
             this._logger = _logger;
-            _intervals = new List<TimeSpan>()
+            Intervals = new List<TimeSpan>()
             {
                 new TimeSpan(8, 0, 0),
                 new TimeSpan(9, 50, 0),
                 new TimeSpan(12, 20, 0),
-                new TimeSpan(14,10, 0),
+                new TimeSpan(14, 10, 0),
                 new TimeSpan(16, 0, 0),
                 new TimeSpan(17, 50, 0),
                 new TimeSpan(19, 30, 0),
@@ -56,7 +54,7 @@ namespace Timetable.BotCore.Workers
         public async void CheckTime(object obj)
         {
             // Просчитываем будущее время
-            var futureTime = DateTime.Now.AddMinutes(beforeMinutes);
+            var futureTime = DtExtensions.LocalTimeNow().AddMinutes(beforeMinutes);
             _logger.LogInformation("Проверка времени " + futureTime.ToString("HH:mm dd.MM.yyyy"));
 
             // Смотрим соответствует ли текущее (будущее) время
@@ -66,7 +64,7 @@ namespace Timetable.BotCore.Workers
 
                 // Тут будем хранить все занятия, которые начнутся через n - минут
                 List<Lesson> allLessons = new List<Lesson>();
-                foreach (var interval in _intervals)
+                foreach (var interval in Intervals)
                 {
                     // Если текущее (будущее) время соответствует начале пары
                     if (interval.TimeEquals(futureTime.TimeOfDay))
@@ -95,7 +93,7 @@ namespace Timetable.BotCore.Workers
 
         public async void SendNotifications(IEnumerable<Lesson> lessons)
         {
-            _logger.LogInformation("Начата рассылка в " + DateTime.Now.ToString("HH:mm dd.MM.yyyy"));
+            _logger.LogInformation("Начата рассылка в " + DtExtensions.LocalTimeNow().ToString("HH:mm dd.MM.yyyy"));
             using (DatabaseContext db = new DatabaseContext())
             {
                 foreach (var lesson in lessons)
@@ -103,7 +101,7 @@ namespace Timetable.BotCore.Workers
                     // Берём только userid
                     var chunksUsers = db.Users.Where(x => x.Group == lesson.Group && x.Subscribtion.HasValue)
                                               .ToList()
-                                              .Where(x => x.Subscribtion > DateTime.Now)
+                                              .Where(x => x.Subscribtion > DtExtensions.LocalTimeNow())
                                               .Select(x => x.UserId).Chunk(100);
                     if (chunksUsers.Any())
                     {
@@ -119,7 +117,7 @@ namespace Timetable.BotCore.Workers
                                 {
                                     UserIds = users,
                                     Message = message,
-                                    RandomId = rnd.Next(),
+                                    RandomId = ConcurrentRandom.Next(),
                                 });
                             }
                             catch { } // Запрет сообщений
@@ -150,7 +148,11 @@ namespace Timetable.BotCore.Workers
                     parser.UpdateGroups();
                     await parser.UpdateTimetable();
                 }
-            } catch { }
+                GC.Collect();
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error when parsing or updating timetable");
+            }
         }
 
     }

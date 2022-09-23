@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using Timetable.BotCore.Abstractions;
+using Timetable.Helpers;
 using Timetable.Models.Payment;
 
 namespace Timetable.BotCore
@@ -93,7 +94,7 @@ namespace Timetable.BotCore
                         Currency = "RUB",
                         Value = 30.0m,
                     },
-                    ExpirationDateTime = DateTime.Now.AddMinutes(20),
+                    ExpirationDateTime = DtExtensions.LocalTimeNow().AddMinutes(20),
                     Comment = "После оплаты счёта нажмите кнопку «Проверить», чтобы активировать подписку",
                     Customer = new Customer()
                     {

@@ -42,19 +42,19 @@ namespace Timetable.BotCore.Commands.TextMessage
                 if (user != null)
                 {
                     var expires = user.Subscribtion;
-                    if (expires.HasValue && expires.Value > DateTime.Now)
+                    if (expires.HasValue && expires.Value > DtExtensions.LocalTimeNow())
                     {
                         user.Subscribtion = expires.Value.AddDays(days);
                     }
                     else
                     {
-                        user.Subscribtion = DateTime.Now.AddDays(days);
+                        user.Subscribtion = DtExtensions.LocalTimeNow().AddDays(days);
                     }
                     await vkApi.Messages.SendAsync(new MessagesSendParams()
                     {
                         Message = $"➕ Вам добавили {days} дней подписки!",
                         UserId = userid,
-                        RandomId = Bot.rnd.Next(),
+                        RandomId = ConcurrentRandom.Next(),
                     });
                 }
                 else
@@ -62,7 +62,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                     await db.Users.AddAsync(new BotUser()
                     {
                         UserId = userid,
-                        Subscribtion = DateTime.Now.AddDays(days),
+                        Subscribtion = DtExtensions.LocalTimeNow().AddDays(days),
                     });
                 }
                 await db.SaveChangesAsync();
@@ -70,7 +70,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = $"☑ Пользователю {screen_name} успешно добавлено {days} дней",
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
             catch
@@ -79,7 +79,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = "Произошла ошибка при выполнении команды, проверьте синтаксис",
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
         }

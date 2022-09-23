@@ -42,7 +42,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                     {
                         Message = "🎊 Вас назначили администратором!\nНапишите «Начать», чтобы получить админское меню",
                         UserId = userid,
-                        RandomId = Bot.rnd.Next(),
+                        RandomId = ConcurrentRandom.Next(),
                     });
                 }
                 else
@@ -59,7 +59,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = $"☑ Пользователь {screen_name} успешно назначен администратором",
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
             catch
@@ -68,7 +68,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     Message = "Произошла ошибка при выполнении команды, проверьте синтаксис",
                     UserId = msg.FromId.Value,
-                    RandomId = Bot.rnd.Next(),
+                    RandomId = ConcurrentRandom.Next(),
                 });
             }
         }

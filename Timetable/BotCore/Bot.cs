@@ -12,11 +12,6 @@ namespace Timetable.BotCore
 {
     public class Bot : IVkBot
     {
-        /// <summary>
-        /// Для отправка сообщения и генерации случайного числа
-        /// </summary>
-        public static Random rnd = new Random();
-
         /// <inheritdoc />
         public IVkApi _vkApi { get; set; }
 
@@ -26,9 +21,9 @@ namespace Timetable.BotCore
         /// <summary>
         /// Команды бота
         /// </summary>
-        public IVkBotCommand[] vkBotTextCommands { get; set; }
+        public IEnumerable<IVkBotCommand> vkBotTextCommands { get; set; }
         private IVkBotCommand _registerUserCommand { get; set; }
-        public IVkBotCommand[] vkBotCallbackCommands { get; set; }
+        public IEnumerable<IVkBotCommand> vkBotCallbackCommands { get; set; }
 
 
         private readonly ILogger _logger;
@@ -60,6 +55,7 @@ namespace Timetable.BotCore
                 new DeleteSubsCommand(_vkApi),
                 new UserInfoCommand(_vkApi),
                 new StickerCommand(_vkApi),
+                new WeekCommand(_vkApi, _monitor.Intervals),
                 new FindCommand(_vkApi),
             };
             vkBotCallbackCommands = new IVkBotCommand[]
@@ -131,6 +127,7 @@ namespace Timetable.BotCore
             {
                 _logger.LogError(ex.Message);
             }
+            GC.Collect();
         }
     }
 }

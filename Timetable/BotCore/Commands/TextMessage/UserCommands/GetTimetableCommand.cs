@@ -71,7 +71,7 @@ namespace Timetable.BotCore.Commands.TextMessage
             await vkApi.Messages.SendAsync(new MessagesSendParams()
             {
                 UserId = userid,
-                RandomId = Bot.rnd.Next(),
+                RandomId = ConcurrentRandom.Next(),
                 Message = message,
                 DontParseLinks = true, //https://vk.com/topic-208050569_48189901?post=14
             });
