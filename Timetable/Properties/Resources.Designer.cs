@@ -63,6 +63,16 @@ namespace Timetable.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        public static byte[] _1 {
+            get {
+                object obj = ResourceManager.GetObject("_1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         public static byte[] _2 {
             get {
                 object obj = ResourceManager.GetObject("2", resourceCulture);
@@ -76,6 +86,46 @@ namespace Timetable.Properties {
         public static byte[] _3 {
             get {
                 object obj = ResourceManager.GetObject("3", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] _4 {
+            get {
+                object obj = ResourceManager.GetObject("_4", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] _7 {
+            get {
+                object obj = ResourceManager.GetObject("_7", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] _8 {
+            get {
+                object obj = ResourceManager.GetObject("_8", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] _9 {
+            get {
+                object obj = ResourceManager.GetObject("_9", resourceCulture);
                 return ((byte[])(obj));
             }
         }

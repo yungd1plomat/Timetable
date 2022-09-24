@@ -19,12 +19,16 @@ namespace Timetable.BotCore
 
         private string groupName { get; set; }
 
-
         static TimetableDoc()
         {
             _images = new ConcurrentQueue<byte[]>();
+            _images.Enqueue(Properties.Resources._1);
             _images.Enqueue(Properties.Resources._2);
             _images.Enqueue(Properties.Resources._3);
+            _images.Enqueue(Properties.Resources._4);
+            _images.Enqueue(Properties.Resources._7);
+            _images.Enqueue(Properties.Resources._8);
+            _images.Enqueue(Properties.Resources._9);
         }
 
 
