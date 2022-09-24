@@ -22,9 +22,9 @@
 1. Установите [Docker](https://www.docker.com/products/docker-desktop/) 
 2. Откройте проект в Visual Studio, выберите *Сборка - Опубликовать Timetable - Реестр контейнеров Docker* и опубликуйте образ в нужном вам месте
 3. Либо же соберите образ вручную:
-`docker build -t yungd1plomat/timetable:lastest`
-`docker push yungd1plomat/timetable:latest`
-3.\* На целевой машине пробросьте порты на 3810 с помощью Ngrok для безопастности
-4. Запустите проект при помощи команды запуск docker run --restart=always -itd -p 3810:3810 yungd1plomat/timetable
+```docker build -t yungd1plomat/timetable:lastest
+docker push yungd1plomat/timetable:latest```
+4.\* На целевой машине пробросьте порты на 3810 с помощью Ngrok для безопастности
+5. Запустите проект при помощи команды запуск docker run --restart=always -itd -p 3810:3810 yungd1plomat/timetable
 \* - не обязательно
 
