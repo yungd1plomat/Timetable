@@ -100,8 +100,9 @@ namespace Timetable.BotCore
                 }
             } catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, ex.StackTrace);
             }
+            GC.Collect();
         }
 
         public async void RegisterMessage(Message msg)
@@ -126,7 +127,7 @@ namespace Timetable.BotCore
                 }
             } catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, ex.StackTrace);
             }
             GC.Collect();
         }
