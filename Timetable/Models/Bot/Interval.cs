@@ -2,14 +2,14 @@
 {
     public class Interval
     {
-        public IList<Lesson> Lessons { get; set; }
+        public IList<Day> Days { get; set; }
 
         public TimeSpan Time { get; set; }
 
-        public Interval(TimeSpan time, IList<Lesson> lessons)
+        public Interval(TimeSpan time)
         {
             Time = time;
-            Lessons = lessons;
+            Days = new List<Day>();
         }
     }
 }

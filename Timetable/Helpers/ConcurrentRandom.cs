@@ -2,7 +2,7 @@
 {
     public static class ConcurrentRandom
     {
-        private static object locker = new object();
+        public static object Locker = new object();
 
 
         private static Random rnd = new Random();
@@ -20,7 +20,7 @@
         /// </returns>
         public static int Next(int min, int max)
         {
-            lock (locker)
+            lock (Locker)
             {
                 return rnd.Next(min, max);
             }
@@ -36,7 +36,7 @@
         /// </returns>
         public static int Next()
         {
-            lock (locker)
+            lock (Locker)
             {
                 return rnd.Next();
             }

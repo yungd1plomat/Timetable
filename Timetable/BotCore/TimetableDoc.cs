@@ -1,6 +1,7 @@
 ﻿using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
+using System.Collections.Concurrent;
 using Timetable.Helpers;
 using Timetable.Models.Bot;
 
@@ -8,42 +9,47 @@ namespace Timetable.BotCore
 {
     public class TimetableDoc : IDocument
     {
-        private static IList<byte[]> _images = new List<byte[]>()
-        {
-            Properties.Resources._2,
-            Properties.Resources._3,
-        };
+        private static ConcurrentQueue<byte[]> _images;
 
         private const string fontFamily = "Montserrat";
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
 
-        private IEnumerable<Day> weekLessons { get; set; }
+        private IEnumerable<Interval> intervals { get; set; }
 
         private string groupName { get; set; }
 
 
-        public TimetableDoc(IEnumerable<Day> weekLessons, string groupName)
+        static TimetableDoc()
         {
-            //QuestPDF.Drawing.FontManager.RegisterFont("")
-            this.weekLessons = weekLessons;
+            _images = new ConcurrentQueue<byte[]>();
+            _images.Enqueue(Properties.Resources._2);
+            _images.Enqueue(Properties.Resources._3);
+        }
+
+
+        public TimetableDoc(IEnumerable<Interval> intervals, string groupName)
+        {
+            this.intervals = intervals;
             this.groupName = groupName;
         }
 
-        private byte[] GetImg()
+        private byte[]? GetImg()
         {
-            int id = ConcurrentRandom.Next(0, _images.Count() - 1);
-            return _images[id];
+            if (_images.TryDequeue(out byte[]? img))
+            {
+                _images.Enqueue(img);
+            }
+            return img;
         }
 
         public void Compose(IDocumentContainer container)
         {
             container.Page(page =>
             {
-                page.Size(60.1f, 30, Unit.Centimetre);
-                
-                page.Background().Image(GetImg(), ImageScaling.Resize);
-                //page.PageColor("#000115");
+                page.Size(60.1f, 35, Unit.Centimetre);
+                var image = GetImg() ?? Properties.Resources._3;
+                page.Background().Image(image, ImageScaling.Resize);
                 page.Header().Element(ComposeHeader);
                 page.Content().Element(ComposeContent);
                 page.Footer().Height(1f, Unit.Centimetre)
@@ -59,14 +65,16 @@ namespace Timetable.BotCore
 
         private void ComposeHeader(IContainer container)
         {
+            var firstDay = intervals.First().Days.First();
+            var lastDay = intervals.First().Days.Last();
             container.Element(HeaderStyle)
                      .Text(text =>
                      {
                          text.AlignCenter();
                          text.Span($"Расписание с ").FontColor("#fff");
-                         text.Span(weekLessons.First().Date).FontColor("#ff007a");
+                         text.Span(firstDay.Date).FontColor("#ff007a");
                          text.Span(" по ").FontColor("#fff");
-                         text.Line(weekLessons.Last().Date).FontColor("#ff007a");
+                         text.Line(lastDay.Date).FontColor("#ff007a");
                          text.Span($"{groupName}").Bold()
                                                   .FontSize(20)
                                                   .FontColor("#fff");
@@ -91,49 +99,60 @@ namespace Timetable.BotCore
                 table.ColumnsDefinition(columns =>
                 {
                     columns.ConstantColumn(5f, Unit.Centimetre);
-                    columns.ConstantColumn(7.86f, Unit.Centimetre);
-                    columns.ConstantColumn(7.86f, Unit.Centimetre);
-                    columns.ConstantColumn(7.86f, Unit.Centimetre);
-                    columns.ConstantColumn(7.86f, Unit.Centimetre);
-                    columns.ConstantColumn(7.86f, Unit.Centimetre);
-                    columns.ConstantColumn(7.86f, Unit.Centimetre);
-                    columns.ConstantColumn(7.86f, Unit.Centimetre);
+                    columns.ConstantColumn(9.17f, Unit.Centimetre);
+                    columns.ConstantColumn(9.17f, Unit.Centimetre);
+                    columns.ConstantColumn(9.17f, Unit.Centimetre);
+                    columns.ConstantColumn(9.17f, Unit.Centimetre);
+                    columns.ConstantColumn(9.17f, Unit.Centimetre);
+                    columns.ConstantColumn(9.17f, Unit.Centimetre);
                 });
 
                 // step 2
                 table.Header(header =>
                 {
-                    header.Cell().Element(HeaderCellStyle).Text("День / Время").SemiBold();
-                    foreach (var interval in weekLessons.First().Intervals)
+                    header.Cell().Element(HeaderCellStyle).Text("Время / День").SemiBold();
+                    foreach (var day in intervals.First().Days)
                     {
-                        header.Cell().Element(HeaderCellStyle).Text($"{interval.Time.ToString(@"hh\:mm")} - " +
-                                                                    $"{interval.Time.Add(TimeSpan.FromHours(1.5)).ToString(@"hh\:mm")}")
-                                                              .SemiBold();
+                        // Если в данный день нету пар, то подсвечиваем его
+                        // красным цветом
+                        var color = intervals.Select(x => x.Days)
+                                             .Where(x => x.Any(y => y.Date == day.Date &&
+                                                                    y.Lessons.Any()))
+                                             .Any() ?
+                                             "#fff" : "ff0073";
+                        header.Cell().Element(HeaderCellStyle).Text(text =>
+                        {
+                            text.AlignCenter();
+                            text.Line(day.DayName).FontColor(color);
+                            text.Span(day.Date).FontColor(color);
+                        });
                     }
                 });
-
-                foreach (var day in weekLessons)
+                int num = 1;
+                foreach (var interval in intervals)
                 {
                     table.Cell().Element(CellStyle).Column(column =>
                     {
                         column.Spacing(7);
                         column.Item().Row(row =>
                         {
-                            row.RelativeItem().Element(RowStyle).Text(day.DayName).SemiBold().FontSize(14);
+                            row.RelativeItem().Element(RowStyle).BorderColor("#e8e6e3")
+                                                                .BorderBottom(0.5f)
+                                                                .PaddingBottom(7)
+                                                                .Text(interval.Time.ToString(@"hh\:mm")).FontSize(16).SemiBold();
                         });
                         column.Item().Row(row =>
                         {
-                            row.RelativeItem().Element(RowStyle).Text(day.Date).SemiBold().FontSize(14);
+                            row.RelativeItem().Element(RowStyle).Text(interval.Time.Add(TimeSpan.FromHours(1.5)).ToString(@"hh\:mm")).FontSize(16).SemiBold();
                         });
                     });
-                    foreach (var interval in day.Intervals)
+                    foreach (var day in interval.Days)
                     {
-                        string color = interval.Lessons.Any() ? "#181a1b" : "#546575";
                         table.Cell().Element(CellStyle)
                                     .Column(column =>
                                     {
                                         column.Spacing(7);
-                                        foreach (var lesson in interval.Lessons)
+                                        foreach (var lesson in day.Lessons)
                                         {
                                             column.Item().Row(row =>
                                             {
@@ -143,14 +162,18 @@ namespace Timetable.BotCore
                                             // Например у разных подгрупп.
                                             // Нам нужно нарисовать черточку снизу только
                                             // если есть еще пары, кроме текущей
-                                            var item = lesson != interval.Lessons.Last() ? column.Item().BorderBottom(1) : column.Item();
+                                            var item = lesson != day.Lessons.Last() ? column.Item().BorderColor("#e8e6e3")
+                                                                                                   .BorderBottom(1)
+                                                                                                   .PaddingBottom(5) : column.Item();
                                             item.Row(row =>
                                             {
                                                 row.RelativeItem().Element(RowStyle).Text(lesson.Teacher).Italic(true);
                                             });
                                         }
                                     });
+
                     }
+                    num++;
                 }
             });
         }
@@ -167,12 +190,13 @@ namespace Timetable.BotCore
 
         private static IContainer HeaderCellStyle(IContainer container)
         {
-            return container.DefaultTextStyle(x => x.FontFamily(fontFamily).FontSize(13)
-                                                                           .FontColor("#fff")
-                                                                           .Bold()).BorderColor("#e8e6e3")
-                                                                                   .Border(1)
-                                                                                   .AlignCenter()
-                                                                                   .AlignMiddle();
+            return container.DefaultTextStyle(x => x.FontFamily(fontFamily)
+                                                    .FontSize(14)
+                                                    .FontColor("#fff")
+                                                    .Bold()).BorderColor("#e8e6e3")
+                                                            .Border(1)
+                                                            .AlignCenter()
+                                                            .AlignMiddle();
         }
 
         private static IContainer CellStyle(IContainer container)

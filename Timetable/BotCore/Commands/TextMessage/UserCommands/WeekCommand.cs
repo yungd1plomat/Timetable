@@ -38,9 +38,9 @@ namespace Timetable.BotCore.Commands.TextMessage
             });
             var user = db.Users.Where(x => x.UserId == userid).FirstOrDefault();
             var dateTime = msg.Text.ToLower().Contains("следующая") ? DtExtensions.LocalTimeNow().AddDays(7) : 
-                                                            DtExtensions.LocalTimeNow();
-            var days = GetWeekLessons(user.Group, dateTime, db);
-            var doc = new TimetableDoc(days, user.Group.GroupName);
+                                                                      DtExtensions.LocalTimeNow();
+            var intervalLessons = GetWeekLessons(user.Group, dateTime, db);
+            var doc = new TimetableDoc(intervalLessons, user.Group.GroupName);
             var img = doc.GenerateImages().FirstOrDefault();
             var photo = await UploadPhoto(img);
             await Task.Delay(1500);
@@ -51,7 +51,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     photo,
                 },
-                Message = $"📅 Ваше расписание с {days.First().Date} по {days.Last().Date} 📅",
+                Message = $"📅 Ваше расписание с {intervalLessons.First().Days.First().Date} по {intervalLessons.First().Days.Last().Date} 📅",
                 RandomId = ConcurrentRandom.Next(),
             });
         }
@@ -91,35 +91,36 @@ namespace Timetable.BotCore.Commands.TextMessage
         }
 
         /// <summary>
-        /// Получить все дни недели вместе с парами
-        /// для каждого дня
+        /// Получить все дни недели вместе с парами.
+        /// Такая архитектур потому что библиотека questPdf строит
+        /// ячейки слева направо, а не снизу вверх.
+        /// Т.е нам необходимо интервал и дни недели для построения
+        /// расписания сверху вниз
         /// </summary>
         /// <param name="group"></param>
         /// <param name="dateTime"></param>
         /// <param name="db"></param>
         /// <returns>
-        /// Дни недели с парами
+        /// Пары содержащие дни недели вместе с лекциями
         /// </returns>
-        private IEnumerable<Day> GetWeekLessons(Group group, DateTime dateTime, DatabaseContext db)
+        private IEnumerable<Interval> GetWeekLessons(Group group, DateTime dateTime, DatabaseContext db)
         {
-            var days = new List<Day>();
+            var intervals = new List<Interval>();
             var weekDays = dateTime.GetWeekDays();
-            IEnumerable<Lesson> lessons = db.Lessons.Where(x => x.Group == group &&
-                                                                x.StartTime.Date >= weekDays.First().Date &&
-                                                                x.StartTime.Date <= weekDays.Last().Date).ToList();
-            foreach (var weekDay in weekDays)
+            foreach (var time in _intervals)
             {
-                Day day = new Day(weekDay);
-                foreach (var _interval in _intervals)
+                Interval interval = new Interval(time);
+                foreach (var weekDay in weekDays)
                 {
-                    var groupLessons = lessons.Where(x => x.StartTime.Date.Equals(weekDay.Date) &&
-                                                          x.StartTime.TimeOfDay.Equals(_interval)).ToList();
-                    Interval interval = new Interval(_interval, groupLessons);
-                    day.Intervals.Add(interval);
+                    IList<Lesson> lessons = db.Lessons.Where(x => x.Group == group &&
+                                                                  x.StartTime.Date == weekDay.Date &&
+                                                                  x.StartTime.TimeOfDay == interval.Time).ToList();
+                    Day day = new Day(weekDay, lessons);
+                    interval.Days.Add(day);
                 }
-                days.Add(day);
+                intervals.Add(interval);
             }
-            return days;
+            return intervals;
         }
     }
 }

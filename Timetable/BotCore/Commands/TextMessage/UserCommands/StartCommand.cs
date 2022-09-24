@@ -43,7 +43,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                                 .AddButton("👁 Завтра", "tomorrow", KeyboardButtonColor.Primary)
                                 .AddButton("👀 Послезавтра", "after_tomorrow", KeyboardButtonColor.Primary)
                                 .AddLine()
-                                .AddButton("🕗 Текущая неделя", "this_week", KeyboardButtonColor.Primary)
+                                .AddButton("🕗 Текущая неделя", "this_week", KeyboardButtonColor.Positive)
                                 .AddLine()
                                 .AddButton("🕓 Следующая неделя", "next_week", KeyboardButtonColor.Primary)
                                 .AddLine()
