@@ -15,6 +15,8 @@ RUN dotnet build "Timetable.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "Timetable.csproj" -c Release -o /app/publish
 
+RUN apt-get update && apt-get install -y libfontconfig1
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
