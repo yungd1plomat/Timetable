@@ -41,7 +41,20 @@ namespace Timetable.BotCore.Abstractions
         /// </summary>
         /// <param name="group"></param>
         /// <param name="lessons"></param>
-        void SendNotifications(IEnumerable<Lesson> lessons);
+        Task SendNotifications(IEnumerable<string> codes);
+
+        /// <summary>
+        /// Пакует сообщения пользователей в код VKScript
+        /// для дальнейшей рассылки пользователям.
+        /// Таким образом мы обходим ограничения АПИ.
+        /// В 1 вызове кода VKScript не более 25 вызовов
+        /// Вызывать Execute можно 3 раза в секунду
+        /// Т.е мы сможем рассылать сообщение 75 людям в секунду, вместо 3
+        /// </summary>
+        /// <param name="userMessages">
+        /// Список из кодов VKScript для метода execute
+        /// </param>
+        IEnumerable<string> PackToCodes(Dictionary<string, List<long>> userMessages);
 
         /// <summary>
         /// Callback таймера

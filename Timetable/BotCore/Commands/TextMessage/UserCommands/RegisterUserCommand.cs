@@ -29,6 +29,7 @@ namespace Timetable.BotCore.Commands.TextMessage
                 {
                     UserId = userid,
                     Subscribtion = DateTime.MaxValue,
+                    Timer = 15,
                 });
                 db.SaveChanges();
             }

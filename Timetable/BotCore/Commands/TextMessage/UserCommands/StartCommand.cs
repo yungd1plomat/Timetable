@@ -47,6 +47,8 @@ namespace Timetable.BotCore.Commands.TextMessage
                                 .AddLine()
                                 .AddButton("🕓 Следующая неделя", "next_week", KeyboardButtonColor.Primary)
                                 .AddLine()
+                                .AddButton("🕛 Таймер уведомлений", "timer", KeyboardButtonColor.Positive)
+                                .AddLine()
                                 .AddButton("👥 Установить группу", "setgroup", KeyboardButtonColor.Positive)
                                 .AddLine()
                                 .AddButton("📈 Статистика", "statistics", KeyboardButtonColor.Positive)

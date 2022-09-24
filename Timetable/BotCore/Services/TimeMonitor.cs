@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text;
 using Timetable.BotCore.Abstractions;
 using Timetable.Helpers;
 using Timetable.Models;
 using VkNet.Abstractions;
+using VkNet.Model;
+using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
 
 
@@ -10,6 +14,8 @@ namespace Timetable.BotCore.Workers
 {
     public class TimeMonitor : IMonitor
     {
+        private const string vkScript = "var i = 0;\r\nwhile (i != data.length) {\t\r\nvar msg = data[i][0];\r\n\tvar arr = data[i];\r\n\tvar userIds = arr.slice(1, arr.lenght);\r\n\tAPI.messages.send({\"user_ids\": userIds, \"random_id\":randomIds[i], \"message\": msg });\r\n\ti = i + 1;\r\n}";
+
         public IVkApi _vkApi { get; set; }
 
         public Timer timer { get; set; }
@@ -20,19 +26,14 @@ namespace Timetable.BotCore.Workers
         private readonly ILogger _logger;
         
         /// <summary>
-        /// За сколько минут придет уведомление
-        /// </summary>
-        private readonly int beforeMinutes = 15;
-
-        /// <summary>
         /// Время в которое расписание обновится
         /// </summary>
-        private readonly TimeSpan updateTime = new TimeSpan(0, 10, 0); // Время в которое расписание обновится
+        private readonly TimeSpan updateTime = new TimeSpan(0, 0, 0); // Время в которое расписание обновится
 
         /// <summary>
         /// Первый запуск
         /// </summary>
-        private bool FistStart = true;
+        private bool FirstStart = true;
 
 
         public TimeMonitor(IVkApi api, ILogger _logger)
@@ -53,80 +54,105 @@ namespace Timetable.BotCore.Workers
 
         public async void CheckTime(object obj)
         {
-            // Просчитываем будущее время
-            var futureTime = DtExtensions.LocalTimeNow().AddMinutes(beforeMinutes);
-            _logger.LogInformation("Проверка времени " + futureTime.ToString("HH:mm dd.MM.yyyy"));
-
-            // Смотрим соответствует ли текущее (будущее) время
-            // времени начала пар
+            var currentTime = DtExtensions.LocalTimeNow();
+            _logger.LogInformation($"Проверка времени {currentTime}");
             using (DatabaseContext db = new DatabaseContext())
             {
-
-                // Тут будем хранить все занятия, которые начнутся через n - минут
-                List<Lesson> allLessons = new List<Lesson>();
-                foreach (var interval in Intervals)
+                var users = db.Users.Where(x => x.Timer != null &&
+                                                x.Timer != 0).ToList();
+                var lessons = db.Lessons.Include(x => x.Group).ToList();
+                Dictionary<string, List<long>> userMessages = new ();
+                foreach (var user in users)
                 {
-                    // Если текущее (будущее) время соответствует начале пары
-                    if (interval.TimeEquals(futureTime.TimeOfDay))
-                    {
-                        var lessons = db.Lessons.Include(x => x.Group).ToList().Where(x => x.StartTime.DateEquals(futureTime));
-
-                        allLessons.AddRange(lessons);
-                    }
+                    if (user.Timer == null ||
+                        user.Timer == 0)
+                        continue;
+                    // Просчитываем будущее время
+                    var futureTime = currentTime.AddMinutes(user.Timer.Value);
+                    if (!Intervals.Any(x => x.TimeEquals(futureTime.TimeOfDay)))
+                        continue;
+                    var userLessons = lessons.Where(x => x.Group == user.Group &&
+                                                         x.StartTime.DateEquals(futureTime))
+                                             .Select(x => x.ToShortString());
+                    if (!userLessons.Any())
+                        continue;
+                    _logger.LogInformation($"У пользователя {user.UserId} начинается занятие через {user.Timer} минут");
+                    string message = string.Format("🔔 Через {0} минут у вас начинается занятие:\\r\\n\\n{1}", user.Timer, string.Join("\\n", userLessons));
+                    if (userMessages.ContainsKey(message))
+                        userMessages[message].Add(user.UserId);
+                    else
+                        userMessages.Add(message, new List<long>() { user.UserId });
                 }
-
-                if (allLessons.Any())
-                {
-                    _logger.LogInformation("Время прошло проверку " + futureTime.ToString("HH:mm dd.MM.yyyy"));
-                    SendNotifications(allLessons);
-                }
-
+                var codes = PackToCodes(userMessages);
+                await SendNotifications(codes);
                 // Если текущее время соответствует времени обновления
                 // или если это первый запуск (бд пуста)
-                if (updateTime.TimeEquals(futureTime.TimeOfDay) || (FistStart && !db.Lessons.Any()))
+                if (updateTime.TimeEquals(currentTime.TimeOfDay) || (FirstStart && !db.Lessons.Any()))
                 {
-                    FistStart = false;
+                    FirstStart = false;
                     UpdateTimetable();
                 }
             }
         }
 
-        public async void SendNotifications(IEnumerable<Lesson> lessons)
+        public async Task SendNotifications(IEnumerable<string> codes)
         {
-            _logger.LogInformation("Начата рассылка в " + DtExtensions.LocalTimeNow().ToString("HH:mm dd.MM.yyyy"));
-            using (DatabaseContext db = new DatabaseContext())
+            foreach (var code in codes)
             {
-                foreach (var lesson in lessons)
+                try
                 {
-                    // Берём только userid
-                    var chunksUsers = db.Users.Where(x => x.Group == lesson.Group && x.Subscribtion.HasValue)
-                                              .ToList()
-                                              .Where(x => x.Subscribtion > DtExtensions.LocalTimeNow())
-                                              .Select(x => x.UserId).Chunk(100);
-                    if (chunksUsers.Any())
-                    {
-                        // Сообщение которое получит пользователь
-                        string message = $"🔔 Через {beforeMinutes} минут у вас начинается занятие:\r\n\n{lesson.ToShortString()}";
-
-                        // Рассылаем по 100 юзеров
-                        foreach (var users in chunksUsers)
-                        {
-                            try
-                            {
-                                await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams()
-                                {
-                                    UserIds = users,
-                                    Message = message,
-                                    RandomId = ConcurrentRandom.Next(),
-                                });
-                            }
-                            catch { } // Запрет сообщений
-                            //await Task.Delay(1000); // На всякий случай, ограничение вк апи
-                        }
-                        _logger.LogInformation("Уведомили группу {0}", lesson.Group.GroupName);
-                    }
+                    await _vkApi.Execute.ExecuteAsync(code);
+                    _logger.LogInformation($"Успешно выполнили код:\n\n{code}");
+                } catch (Exception ex)
+                {
+                    _logger.LogError($"Ошибка при execute, код:\n\n {code}\n\n текст: {ex.Message}");
                 }
+                await Task.Delay(320);
             }
+        }
+
+        public IEnumerable<string> PackToCodes(Dictionary<string, List<long>> userMessages)
+        {
+            /*var randomIds = [128923, 12324];
+              var data = [
+                 ["hi1", 13337, 137778129],
+                 ["test1", 12222, 137778129]
+              ];
+              var i = 0;
+              while (i != data.length) { 
+                 var msg = data[i][0];
+                 var arr = data[i];
+                 var userIds = arr.slice(1, arr.lenght);
+                 API.messages.send({"user_ids": userIds, "random_id":randomIds[i], "message": msg });
+                i = i + 1;
+              };*/
+
+            List<string> chunkCodes = new List<string>();
+            // Максимум 25 вызовов api в 1 execute
+            var chunkMessages = userMessages.Chunk(25);
+            StringBuilder sb = new StringBuilder();
+            foreach (var messages in chunkMessages)
+            {
+                var randomIds = Enumerable.Repeat(0, chunkMessages.Count()).Select(x => ConcurrentRandom.Next());
+                sb.Append("var randomIds = [");
+                sb.Append(string.Join(", ", randomIds));
+                sb.Append("];\r\n");
+                sb.Append("var data = [\r\n");
+                foreach (var message in messages)
+                {
+                    sb.Append("\t[\"");
+                    sb.Append(message.Key);
+                    sb.Append("\", ");
+                    sb.Append(string.Join(", ", message.Value));
+                    sb.Append("],\r\n");
+                }
+                sb.Append("];\n");
+                sb.Append(vkScript);
+                chunkCodes.Add(sb.ToString());
+                _logger.LogDebug("Generated code:\n" + sb.ToString());
+                sb.Clear();
+            }
+            return chunkCodes;
         }
 
         public void StartMonitoring()
@@ -154,6 +180,5 @@ namespace Timetable.BotCore.Workers
                 _logger.LogError(ex, "Error when parsing or updating timetable");
             }
         }
-
     }
 }

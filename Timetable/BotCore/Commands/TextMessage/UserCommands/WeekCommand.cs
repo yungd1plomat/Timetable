@@ -30,13 +30,16 @@ namespace Timetable.BotCore.Commands.TextMessage
         {
             var msg = update as Message;
             long userid = msg.FromId.Value;
+            var user = db.Users.Where(x => x.UserId == userid).FirstOrDefault();
+            string message = user.Group != null ? "⌛ Ваше расписание генерируется.." : "❌ Для начала установите свою группу.Если у вас нету меню напишите «Начать» ❌";
             await vkApi.Messages.SendAsync(new MessagesSendParams()
             {
-                Message = "⌛ Ваше расписание генерируется..",
+                Message = message,
                 UserId = userid,
                 RandomId = ConcurrentRandom.Next(),
             });
-            var user = db.Users.Where(x => x.UserId == userid).FirstOrDefault();
+            if (user.Group is null)
+                return;
             var dateTime = msg.Text.ToLower().Contains("следующая") ? DtExtensions.LocalTimeNow().AddDays(7) : 
                                                                       DtExtensions.LocalTimeNow();
             var intervalLessons = GetWeekLessons(user.Group, dateTime, db);
@@ -60,8 +63,8 @@ namespace Timetable.BotCore.Commands.TextMessage
         public bool IsMatch(object update, DatabaseContext db)
         {
             var msg = update as Message;
-            return msg != null && msg.Text.ToLower().Contains("текущая неделя") ||
-                                  msg.Text.ToLower().Contains("следующая неделя");
+            return msg != null && (msg.Text.ToLower().Contains("текущая неделя") ||
+                                  msg.Text.ToLower().Contains("следующая неделя"));
         }
 
         /// <summary>

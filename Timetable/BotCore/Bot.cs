@@ -56,6 +56,7 @@ namespace Timetable.BotCore
                 new UserInfoCommand(_vkApi),
                 new StickerCommand(_vkApi),
                 new WeekCommand(_vkApi, _monitor.Intervals),
+                new TimerCommand(_vkApi),
                 new FindCommand(_vkApi),
             };
             vkBotCallbackCommands = new IVkBotCommand[]
