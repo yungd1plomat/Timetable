@@ -102,7 +102,7 @@ namespace Timetable.BotCore.Workers
                 try
                 {
                     await _vkApi.Execute.ExecuteAsync(code);
-                    _logger.LogInformation($"Успешно выполнили код:\n\n{code}");
+                    _logger.LogInformation($"Успешно выполнили код");
                 } catch (Exception ex)
                 {
                     _logger.LogError($"Ошибка при execute, код:\n\n {code}\n\n текст: {ex.Message}");
