@@ -21,6 +21,7 @@ namespace Timetable.BotCore
 
         static TimetableDoc()
         {
+            FontManager.RegisterFont(File.OpenRead("./Assets/Fonts/Montserrat-Bold.ttf"));
             _images = new ConcurrentQueue<byte[]>();
             _images.Enqueue(Properties.Resources._1);
             _images.Enqueue(Properties.Resources._2);
