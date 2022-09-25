@@ -14,7 +14,7 @@ namespace Timetable.BotCore.Commands.TextMessage
 {
     public class WeekCommand : IVkBotCommand
     {
-        private const long groupId = 208190108;
+        private const long groupId = 208050569;
 
         public IVkApi vkApi { get; set; }
 
