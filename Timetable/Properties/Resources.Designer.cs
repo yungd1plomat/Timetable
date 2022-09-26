@@ -139,5 +139,15 @@ namespace Timetable.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] Montserrat_Italic {
+            get {
+                object obj = ResourceManager.GetObject("Montserrat_Italic", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

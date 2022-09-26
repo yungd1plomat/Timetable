@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Fonts\Montserrat-BoldItalic.ttf" />
     <None Remove="Program.cs~RF19c36db.TMP" />
   </ItemGroup>
 
@@ -45,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Fonts\" />
+    <Resource Include="Assets\Fonts\Montserrat-BoldItalic.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,6 +81,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Fonts\Montserrat-Bold.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\Montserrat-Italic.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

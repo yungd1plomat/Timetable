@@ -22,6 +22,7 @@ namespace Timetable.BotCore
         static TimetableDoc()
         {
             FontManager.RegisterFont(new MemoryStream(Properties.Resources.Montserrat_Bold));
+            FontManager.RegisterFont(new MemoryStream(Properties.Resources.Montserrat_Italic));
             _images = new ConcurrentQueue<byte[]>();
             _images.Enqueue(Properties.Resources._1);
             _images.Enqueue(Properties.Resources._2);
