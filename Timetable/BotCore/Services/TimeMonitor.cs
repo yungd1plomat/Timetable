@@ -8,7 +8,7 @@ using VkNet.Abstractions;
 using VkNet.Model;
 using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
-
+using Timetable.Helpers;
 
 namespace Timetable.BotCore.Workers
 {
@@ -78,10 +78,11 @@ namespace Timetable.BotCore.Workers
                         continue;
                     _logger.LogInformation($"У пользователя {user.UserId} начинается занятие через {user.Timer} минут");
                     string message = string.Format("🔔 Через {0} минут у вас начинается занятие:\\r\\n\\n{1}", user.Timer, string.Join("\\n", userLessons));
-                    if (userMessages.ContainsKey(message))
-                        userMessages[message].Add(user.UserId);
+                    string literalEscaped = message.ToLiteral();
+                    if (userMessages.ContainsKey(literalEscaped))
+                        userMessages[literalEscaped].Add(user.UserId);
                     else
-                        userMessages.Add(message, new List<long>() { user.UserId });
+                        userMessages.Add(literalEscaped, new List<long>() { user.UserId });
                 }
                 var codes = PackToCodes(userMessages);
                 await SendNotifications(codes);

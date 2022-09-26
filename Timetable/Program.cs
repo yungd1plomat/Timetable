@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 using Timetable.BotCore.Workers;
 using Timetable.Helpers;
 
