@@ -78,11 +78,10 @@ namespace Timetable.BotCore.Workers
                         continue;
                     _logger.LogInformation($"У пользователя {user.UserId} начинается занятие через {user.Timer} минут");
                     string message = string.Format("🔔 Через {0} минут у вас начинается занятие:\\r\\n\\n{1}", user.Timer, string.Join("\\n", userLessons));
-                    string literalEscaped = message.ToLiteral();
-                    if (userMessages.ContainsKey(literalEscaped))
-                        userMessages[literalEscaped].Add(user.UserId);
+                    if (userMessages.ContainsKey(message))
+                        userMessages[message].Add(user.UserId);
                     else
-                        userMessages.Add(literalEscaped, new List<long>() { user.UserId });
+                        userMessages.Add(message, new List<long>() { user.UserId });
                 }
                 var codes = PackToCodes(userMessages);
                 await SendNotifications(codes);
@@ -141,9 +140,9 @@ namespace Timetable.BotCore.Workers
                 sb.Append("var data = [\r\n");
                 foreach (var message in messages)
                 {
-                    sb.Append("\t[\"");
+                    sb.Append("\t['");
                     sb.Append(message.Key);
-                    sb.Append("\", ");
+                    sb.Append("', ");
                     sb.Append(string.Join(", ", message.Value));
                     sb.Append("],\r\n");
                 }
