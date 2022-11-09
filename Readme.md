@@ -26,7 +26,7 @@
 docker build --file=Timetable/Dockerfile -t yungd1plomat/timetable:lastest .
 docker push yungd1plomat/timetable:latest
 ```
-4.\* На целевой машине пробросьте порты на 3810 с помощью Ngrok для безопастности
+4. На целевой машине пробросьте порты на 3810 с помощью Ngrok для безопастности\*
 5. Запустите проект при помощи команды запуск docker run --restart=always -itd -p 3810:3810 yungd1plomat/timetable
-\* - не обязательно
 
+\* - не обязательно
